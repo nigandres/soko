@@ -16,6 +16,7 @@ class VerificaEdad
      */
     public function handle($request, Closure $next)
     {
+        // restringe que haya ususarios menores de edad
         $user_id = \Auth::id();
         // dd($user_id);
         $user = User::find($user_id);

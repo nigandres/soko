@@ -1,3 +1,4 @@
+<!-- modifique el formulario para que la viste de adecue a mis tablas -->
 @extends('layouts.app')
 
 @section('content')

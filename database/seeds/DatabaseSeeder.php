@@ -11,6 +11,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
+    	// llamo al seeder de la clase de datosSeeder
         $this->call(DatosTableSeeder::class);
     }
 }

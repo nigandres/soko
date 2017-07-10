@@ -1,3 +1,4 @@
+<!-- modifique el login para que se adecue a la validacion -->
 @extends('layouts.app')
 
 @section('content')

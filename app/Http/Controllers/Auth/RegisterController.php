@@ -47,6 +47,7 @@ class RegisterController extends Controller
      */
     protected function validator(array $data)
     {
+        // hago que valide los campos del formulario de registro
         // dd($data);
         return Validator::make($data, [
             'nombre' => 'required|string|max:255',
@@ -65,6 +66,7 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
+        // crea un arreglo con la informacion que tiene el formulario
         return User::create([
             'nombre' => $data['nombre'],
             'edad' => $data['edad'],

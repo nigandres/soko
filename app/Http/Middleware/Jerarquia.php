@@ -16,6 +16,7 @@ class Jerarquia
      */
     public function handle($request, Closure $next)
     {
+        // restringe que no haya usuarios de clase empleados en la pagina
         $user_id = \Auth::id();
         // dd($user_id);
         $user = User::find($user_id);

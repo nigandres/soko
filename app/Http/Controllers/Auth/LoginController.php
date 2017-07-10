@@ -38,6 +38,7 @@ class LoginController extends Controller
     }
     public function username()
     {
-        return 'correo';//recibe el valor de la caja de texto
+        //recibe el valor de la caja de texto de formulario de login
+        return 'correo';
     }
 }

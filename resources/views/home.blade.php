@@ -8,6 +8,7 @@
                 <div class="panel-heading">Dashboard</div>
 
                 <div class="panel-body">
+                    <!-- cambie el mensaje de inicio de sesion -->
                     Iniciaste sesion!
                 </div>
             </div>
