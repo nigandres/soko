@@ -11,6 +11,7 @@ class DatosTableSeeder extends Seeder
      */
     public function run()
     {
+        // se pone una forma de rellenar la tabla con un comando
     	$letras = array('a','b','c','d','e','f','g');
         for($i=0;$i<count($letras);$i++)
         {

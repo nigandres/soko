@@ -14,6 +14,7 @@ class DatoController extends Controller
      */
     public function index()
     {
+        // regresa una vista de los datos recopilados en una pagina
         $datos = Dato::all();
         return view('datos.indexDato',compact('datos'));
     }
@@ -36,6 +37,7 @@ class DatoController extends Controller
      */
     public function store(Request $request)
     {
+        // se insertan el numero de datos en la tabla datos
         // dd($request->input('hidden'));
         $lim = $request->input('hidden');
         for($i = 0; $i <= $lim ; $i++)
@@ -45,7 +47,7 @@ class DatoController extends Controller
             $dato->letras = $request->input('let'.$i);
             $dato->save();
         }
-
+        // redirecciona a la vista para ver los resultados
         return redirect()->action('DatoController@index');
     }
 

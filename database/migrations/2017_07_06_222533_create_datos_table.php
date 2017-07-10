@@ -13,6 +13,7 @@ class CreateDatosTable extends Migration
      */
     public function up()
     {
+        // se modificaron los campos de la tabla datos
         Schema::create('datos', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('numeros');

@@ -1,3 +1,4 @@
+<!-- se crea un formulario dinamico con javascript para registrar mas de un dato -->
 <script type="text/javascript">
     function agregar()
     {

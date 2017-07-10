@@ -1,3 +1,4 @@
+<!-- se crea una vista para los datos -->
 @extends('layouts.app')
 
 @section('content')
