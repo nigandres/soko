@@ -14,6 +14,7 @@ class UserController extends Controller
      */
     public function index()
     {
+        // se crear una coleccion de todos los usuarios registrados
         $users = User::all();
         return view('users.indexUser', compact('users'));
     }

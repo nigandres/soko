@@ -14,6 +14,7 @@ class User extends Authenticatable
      *
      * @var array
      */
+    // se den los accesos a los campos de la tabla
     // public $timestamps = false;
     protected $fillable = [
         'nombre', 'edad', 'cargo', 'correo', 'password',
