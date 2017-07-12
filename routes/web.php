@@ -21,8 +21,8 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
-Route::resource('/user','UserController');
-Route::resource('/dato','DatoController');
+// Route::resource('/user','UserController');
+// Route::resource('/dato','DatoController');
 //esto se crea un middleware que restringe a ciertos ususarios en algunos enlaces
 Route::group(['middleware' => VerificaEdad::class], function ()
 	{
