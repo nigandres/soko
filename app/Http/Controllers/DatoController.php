@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Dato;
+use Maatwebsite\Excel\Facades\Excel;//es para excel xd
 use Illuminate\Http\Request;
 
 class DatoController extends Controller
@@ -94,5 +95,22 @@ class DatoController extends Controller
     public function destroy(Dato $dato)
     {
         //
+    }
+
+    public function exportExcel($id)
+    {
+        $dato = Dato::find($id);
+        $arreglo = array($dato->id,$dato->numeros,$dato->letras);
+        Excel::create('Dato', function($excel) use ($arreglo) {
+
+            $excel->sheet('uno', function($sheet) use ($arreglo) {
+
+                // Sheet manipulation
+                // dd($arreglo);
+                $sheet->fromArray($arreglo);
+
+            });
+
+        })->export('xls');
     }
 }

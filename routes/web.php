@@ -32,4 +32,7 @@ Route::group(['middleware' => Jerarquia::class], function ()
 	{
 		Route::resource('/user','UserController');
 	});
+Route::get('/config/{id}/excel','DatoController@exportExcel');
+Route::get('/download/{tabla}','ExcelController@exportar');
+Route::get('/upload','ExcelController@impotar');
 
