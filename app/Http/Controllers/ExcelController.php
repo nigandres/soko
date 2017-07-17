@@ -11,166 +11,195 @@ use Illuminate\Http\Request;
 class ExcelController extends Controller
 {
     //
+    private $cola;
     public function impotar()
     {
+    	set_time_limit(120);//esto incrementa el tiempo de respuesta
     	$datos = Dato::all();
     	if(count($datos) == 0)
     	{
-	    	set_time_limit(120);//esto incrementa el tiempo de respuesta
-    		// dd('nada');
 	    	Excel::load('Datos.xls', function($reader) {
-		    	// $resultado = $reader->all();
-		    	// $resultado = $reader->get();
-		    	// $resultado = $reader->get(array('numeros'));
-		    	// $resultado = $reader->get(array('letras'));
-		    	
-		    	$resultado = $reader->get(array('id','numeros','letras'));
-
-				// dd($resultado);
-
-		    	$comparador = 0;
-		    	for($i=0; $i < count($resultado)-1 ;$i++)
-		    	{
-			    	$registro_comparador = $resultado[$comparador];
-			    	$registro_incremental = $resultado[$i];
-		    		if($registro_incremental->id != 'hola')
-		    		{
-		    			// dd($registro_incremental->letras);
-		    		}
-		    		elseif($registro_comparador->numeros != $registro_incremental->numeros)
-		    		{
-		    			$dato = new Dato();
-			            $dato->numeros = $registro_comparador->numeros;
-			            $dato->letras = $registro_comparador->letras;
-			            $dato->save();
-		    			$comparador = $i;
-		    		}
-		    	}
-		    	$registro_comparador = $resultado[$comparador];
-		    	$registro_incremental = $resultado[count($resultado)-1];
-		    	if($registro_incremental->id != 'hola')
-	    		{
-	    			if($registro_comparador->numeros != $registro_incremental->numeros)
-		    		{
-		    			$dato = new Dato();
-			            $dato->numeros = $registro_comparador->numeros;
-			            $dato->letras = $registro_comparador->letras;
-			            $dato->save();
-		    		}
-	    			// dd($registro_comparador->letras);
-	    			// dd($registro_incremental->letras);
-	    		}
-		    	elseif($registro_comparador->numeros == $registro_incremental->numeros)
-	    		{
-	    			$dato = new Dato();
-		            $dato->numeros = $registro_comparador->numeros;
-		            $dato->letras = $registro_comparador->letras;
-		            $dato->save();
-	    		}
-	    		elseif($registro_comparador->numeros != $registro_incremental->numeros)
-	    		{
-	    			$dato = new Dato();
-		            $dato->numeros = $registro_comparador->numeros;
-		            $dato->letras = $registro_comparador->letras;
-		            $dato->save();
-	    			$dato = new Dato();
-		            $dato->numeros = $registro_incremental->numeros;
-		            $dato->letras = $registro_incremental->letras;
-		            $dato->save();
-	    		}
-
-		    	// dd($resultado);
-				// se insertan el numero de datos en la tabla datos
-		      //   $lim = count($resultado);
-		      //   for($i = 0; $i <= $lim-1 ; $i++)
-		      //   {
-			    	// $algo = $resultado[$i];
-			    	// dd($algo->letras);
-
-		      //       $dato = new Dato();
-		      //       $dato->numeros = $algo->numeros;
-		      //       $dato->letras = $algo->letras;
-		      //       $dato->save();
-		      //   }
-		        
-			    	// dd(count($resultado));
-			    	// dd($algo->numeros);
-			    	// dd($resultado);
+		    	// $importacion = $reader->all();
+		    	// $importacion = $reader->get();
+		    	// $importacion = $reader->get(array('numeros'));
+		    	$importacion = $reader->get(array('id','numeros','letras'));
+		    	$this->excelNuevo($importacion);
 	    	})->get()/*EL GET PARECE QUE SE PUEDE OMITIR*/;
     	}
     	else
     	{
-	    	set_time_limit(120);//esto incrementa el tiempo de respuesta
-    		// dd($datos);
     		Excel::load('Datos.xls', function($reader) use ($datos) {
-
-		    	$resultado = $reader->get(array('id','numeros','letras'));
-
-		    	$cont = 0;
-		    	$comparador = 0;
-		    	for($i=0; $i < count($resultado)-1 ;$i++)
-		    	{
-			    	$registro_comparador = $resultado[$comparador];
-			    	$registro_incremental = $resultado[$i];
-		    		if($registro_incremental->id != 'hola')
-		    		{
-		    			// dd($registro_incremental->letras);
-		    		}
-		    		elseif($registro_comparador->numeros != $registro_incremental->numeros)
-		    		{
-			    		$dato = $datos[$cont];
-			    		// dd($i.'  '.$dato);
-			            $dato->numeros = $registro_comparador->numeros;
-			            $dato->letras = $registro_comparador->letras;
-			            $dato->save();
-		    			$cont++;
-		    			$comparador = $i;
-		    		}
-		    	}
-		    	// dd('todo bien ? ????');
-		    	$registro_comparador = $resultado[$comparador];
-		    	$registro_incremental = $resultado[count($resultado)-1];
-		    	if($registro_incremental->id != 'hola')
-	    		{
-	    			if($registro_comparador->numeros != $registro_incremental->numeros)
-		    		{
-			    		$dato = $datos[$cont];
-			    		// dd($i.'  '.$dato);
-			            $dato->numeros = $registro_comparador->numeros;
-			            $dato->letras = $registro_comparador->letras;
-			            $dato->save();
-		    		}
-	    			// dd($registro_comparador->letras);
-	    			// dd($registro_incremental->letras);
-	    		}
-		    	elseif($registro_comparador->numeros == $registro_incremental->numeros)
-	    		{
-		    		$dato = $datos[$cont];
-		    		// dd($i.'  '.$dato);
-		            $dato->numeros = $registro_comparador->numeros;
-		            $dato->letras = $registro_comparador->letras;
-		            $dato->save();
-	    		}
-	    		elseif($registro_comparador->numeros != $registro_incremental->numeros)
-	    		{
-		    		$dato = $datos[$cont];
-		    		// dd($i.'  '.$dato);
-		            $dato->numeros = $registro_comparador->numeros;
-		            $dato->letras = $registro_comparador->letras;
-		            $dato->save();
-		    		$dato = $datos[$cont+1];
-		    		// dd($i.'  '.$dato);
-		            $dato->numeros = $registro_incremental->numeros;
-		            $dato->letras = $registro_incremental->letras;
-		            $dato->save();
-	    		}
-		    			    	
+		    	$importacion = $reader->get(array('id','numeros','letras'));
+		    	// dd(count($importacion));
+		    	$this->excelActualizar($importacion,$datos);
 	    	})->get()/*EL GET PARECE QUE SE PUEDE OMITIR*/;
-    	}
 
-        // redirecciona a la vista para ver los resultados
+			for($i=0;$i < count($this->cola);$i++)
+			{
+				$dato = new Dato();
+				$this->datoSave($dato,$this->cola[$i]);
+			}
+    	}
         return redirect()->action('DatoController@index');
     }
+
+	public function excelNuevo($importacion)
+	{
+		$comparador = 0;
+    	for($i=0; $i < count($importacion)-1 ;$i++)
+    	{
+	    	$registro_comparador = $importacion[$comparador];
+	    	$registro_incremental = $importacion[$i];
+    		if($registro_incremental->id == 'hola')
+    		{
+				if($registro_comparador->numeros != $registro_incremental->numeros)
+	    		{
+	    			$dato = new Dato();
+	    			$this->datoSave($dato,$registro_comparador);
+	    			$comparador = $i;
+	    		}
+    		}
+    	}
+    	$registro_comparador = $importacion[$comparador];
+    	$registro_incremental = $importacion[count($importacion)-1];
+    	if($registro_incremental->id != 'hola')
+		{
+			if($registro_comparador->numeros != $registro_incremental->numeros)
+    		{
+    			$dato = new Dato();
+    			$this->datoSave($dato,$registro_comparador);
+    		}
+		}
+    	elseif($registro_comparador->numeros == $registro_incremental->numeros)
+		{
+			$dato = new Dato();
+			$this->datoSave($dato,$registro_comparador);
+		}
+		elseif($registro_comparador->numeros != $registro_incremental->numeros)
+		{
+			$dato = new Dato();
+			$this->datoSave($dato,$registro_comparador);
+			$dato = new Dato();
+			$this->datoSave($dato,$registro_incremental);
+		}
+	}
+
+	public function excelActualizar($importacion,$datos)
+	{
+    	$comparador = 0;
+    	for($i=0; $i < count($importacion)-1 ;$i++)
+    	{
+	    	$registro_comparador = $importacion[$comparador];
+	    	$registro_incremental = $importacion[$i];
+    		if($registro_incremental->id == 'hola')
+    		{
+				if($registro_comparador->numeros != $registro_incremental->numeros)
+	    		{
+			    	$this->busquedaBinaria($i-1,count($importacion)-1,$registro_comparador,$datos);
+	    			$comparador = $i;
+	    		}
+    		}
+    	}
+    	$registro_comparador = $importacion[$comparador];
+    	$registro_incremental = $importacion[count($importacion)-1];
+    	if($registro_incremental->id != 'hola')
+		{
+			if($registro_comparador->numeros != $registro_incremental->numeros)
+    		{
+		    	$this->busquedaBinaria($comparador,count($importacion)-1,$registro_comparador,$datos);
+    		}
+		}
+    	elseif($registro_comparador->numeros == $registro_incremental->numeros)
+		{
+	    	$this->busquedaBinaria($comparador,count($importacion)-1,$registro_comparador,$datos);
+		}
+		elseif($registro_comparador->numeros != $registro_incremental->numeros)
+		{
+	    	$this->busquedaBinaria($comparador,count($importacion)-1,$registro_comparador,$datos);
+	    	$this->busquedaBinaria($comparador+1,count($importacion)-1,$registro_incremental,$datos);
+		}
+		/*
+		$cont = 0;
+    	$comparador = 0;
+    	for($i=0; $i < count($importacion)-1 ;$i++)
+    	{
+	    	$registro_comparador = $importacion[$comparador];
+	    	$registro_incremental = $importacion[$i];
+    		if($registro_incremental->id == 'hola')
+    		{
+				if($registro_comparador->numeros != $registro_incremental->numeros)
+	    		{
+		    		$dato = $datos[$cont];
+	    			$this->datoSave($dato,$registro_comparador);
+	    			$cont++;
+	    			$comparador = $i;
+	    		}
+    		}
+    	}
+    	$registro_comparador = $importacion[$comparador];
+    	$registro_incremental = $importacion[count($importacion)-1];
+    	if($registro_incremental->id != 'hola')
+		{
+			if($registro_comparador->numeros != $registro_incremental->numeros)
+    		{
+	    		$dato = $datos[$cont];
+    			$this->datoSave($dato,$registro_comparador);
+    		}
+		}
+    	elseif($registro_comparador->numeros == $registro_incremental->numeros)
+		{
+    		$dato = $datos[$cont];
+			$this->datoSave($dato,$registro_comparador);
+		}
+		elseif($registro_comparador->numeros != $registro_incremental->numeros)
+		{
+    		$dato = $datos[$cont];
+			$this->datoSave($dato,$registro_comparador);
+    		$dato = $datos[$cont+1];
+			$this->datoSave($dato,$registro_incremental);
+		}
+		*/
+	}
+
+	public function busquedaBinaria($min,$max,$registro_comparador,$datos)
+	{
+		$resultado = round(($min + $max)/2);
+		if($min == $max && $datos[$resultado]->numeros != $registro_comparador->numeros)
+		{
+			// dd($datos[$resultado]->numeros.'___'.$registro_comparador->numeros);
+			// $datos[$resultado]->delete();
+			$this->colaImportar($registro_comparador);
+		}
+		elseif($datos[$resultado]->numeros == $registro_comparador->numeros)
+		{
+			$this->datoSave($datos[$resultado],$registro_comparador);
+		}
+		else
+		{
+			if($datos[$resultado]->numeros < $registro_comparador->numeros)
+			{
+				$this->busquedaBinaria($resultado+1,$max,$registro_comparador,$datos);
+			}
+			else
+			{
+				$this->busquedaBinaria($min,$resultado-1,$registro_comparador,$datos);
+			}
+		}
+	}
+
+	public function datoSave($dato,$registro)
+	{
+		// if($registro->numeros == 4)
+		// dd($dato.'______'.$registro);
+	    $dato->numeros = $registro->numeros;
+	    $dato->letras = $registro->letras;
+	    $dato->save();
+	}
+
+	public function colaImportar($registro)
+	{
+		$this->cola[] = $registro;
+	}
 
     public function exportar($tabla)
     {
@@ -182,7 +211,7 @@ class ExcelController extends Controller
 	    	$datos = Dato::all();
 	    	foreach ($datos as $dato)
 	    	{
-		        $arreglo[] = array($dato->id,$dato->numeros,$dato->letras);
+		        $arreglo[] = array('ID' => 'hola'/*$dato->id*/, 'NUMEROS' => $dato->numeros, 'LETRAS' => $dato->letras);
 	    	}
     	}
     	elseif($tabla == 'user')
@@ -195,15 +224,11 @@ class ExcelController extends Controller
 	    	}
     	}
         Excel::create($nombre, function($excel) use ($arreglo) {
-
 	        $excel->sheet('uno', function($sheet) use ($arreglo) {
-
                 // Sheet manipulation
 		        // dd($arreglo);
                 $sheet->fromArray($arreglo);
-
             });
-
         })->export('xls');
     }
 }
