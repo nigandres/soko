@@ -31,13 +31,14 @@ class ExcelController extends Controller
                 $this->excelActualizar($tabla_importada,$personas);
             })->get()/*EL GET PARECE QUE SE PUEDE OMITIR*/;
 
+            for($i=0;$i < count($this->colaImport);$i++)
+            {
+                $persona = new Persona();
+                $this->personaSave($persona,$this->colaImport[$i]);
+            }
 
-            // dd($this->colaImport);
-            // for($i=0;$i < count($this->cola);$i++)
-            // {
-            //     $dato = new Dato();
-            //     $this->datoSave($dato,$this->cola[$i]);
-            // }
+            $personasActualizadas = Persona::all();
+            $this->ordenamientoBaseDeDatos($personasActualizadas,count($personasActualizadas));
         }
         return redirect()->action('PersonaController@index');
     }
@@ -90,7 +91,6 @@ class ExcelController extends Controller
     public function excelActualizar($importacion,$personas)
     {
     	$desactiva = true;
-    	$indice = 0;
         for($i=0; $i < count($importacion) ;$i++)
         {
             $registro_incremental = $importacion[$i];
@@ -108,16 +108,12 @@ class ExcelController extends Controller
                 {
                 	if($desactiva == true)
                 	{
-                        $this->busquedaBinaria($indice,count($personas)-1,$registro_comparador,$personas);
+                        $this->busquedaBinaria(0,count($personas)-1,$registro_comparador,$personas);
 			            $desactiva = false;
-						// $resultado = ($indice < count($personas)-1) ? $indice++ : ''/*dd($indice)*/ ;
-	                    $indice++;
                 	}
 	                if($registro_incremental->dd4 != null && $registro_incremental->desctab != 'PROFESOR DE ASIGNATURA CONTRATO')
 	            	{
-                        $this->busquedaBinaria($indice,count($personas)-1,$registro_incremental,$personas);
-						// $resultado = ($indice < count($personas)-1) ? $indice++ : ''/*dd($indice)*/ ;
-	                    $indice++;
+                        $this->busquedaBinaria(0,count($personas)-1,$registro_incremental,$personas);
 	                }
             	}
             	else
@@ -126,9 +122,7 @@ class ExcelController extends Controller
 	                {
 		                if($registro_incremental->dd4 != null && $registro_incremental->desctab != 'PROFESOR DE ASIGNATURA CONTRATO')
 		            	{
-	                        $this->busquedaBinaria($indice,count($personas)-1,$registro_incremental,$personas);
-							// $resultado = ($indice < count($personas)-1) ? $indice++ : ''/*dd($indice)*/ ;
-		                    $indice++;
+	                        $this->busquedaBinaria(0,count($personas)-1,$registro_incremental,$personas);
 		                }
 		            }
             	}
@@ -138,8 +132,7 @@ class ExcelController extends Controller
 
     public function busquedaBinaria($min,$max,$registro_comparador,$personas)
     {
-    	// dd($min.'__'.$max.'__'.$registro_comparador->nombre);
-        $resultado = round(($min + $max)/2);
+        $resultado = round(($min + $max)/2, 0, PHP_ROUND_HALF_DOWN);
         if($min == $max && $personas[$resultado]->codigo != $registro_comparador->codigo)
         {
             $this->colaImportar($registro_comparador);
@@ -175,6 +168,39 @@ class ExcelController extends Controller
     public function colaImportar($registro)
     {
         $this->colaImport[] = $registro;
+    }
+
+    public function ordenamientoBaseDeDatos($baseDeDatos,$tamanio)
+    {
+    	$i;
+    	$j;
+    	$aux;
+    	for($i=1;$i < $tamanio;$i++)
+    	{
+    		$j = $i;
+    		while($j > 0 && $baseDeDatos[$j-1]->codigo > $baseDeDatos[$j]->codigo)
+    		{
+    			$aux = $baseDeDatos[$j];
+    			$baseDeDatos[$j] = $baseDeDatos[$j-1];
+    			$baseDeDatos[$j-1] = $aux;
+    			$j--;
+    		}
+    	}
+    	$personas = Persona::all();
+    	for($i=0;$i < count($baseDeDatos);$i++)
+        {
+        	$personaAntes = $personas[$i];
+        	$personaDespues = $baseDeDatos[$i];
+    	// dd($personaDespues);
+        	$personaAntes->nombre = $personaDespues->nombre;
+	        $personaAntes->codigo = $personaDespues->codigo;
+	        $personaAntes->adscripcion_nominal = $personaDespues->adscripcion_nominal;
+	        // $personaAntes->adscripcion_fisica = $personaDespues->blablabla;
+	        $personaAntes->nombramiento = $personaDespues->nombramiento;
+	        $personaAntes->plantel = $personaDespues->plantel;
+	        $personaAntes->save();
+            // $this->personaSave($personaAntes,$personaDespues);
+        }
     }
 
     public function exportar($tabla)
