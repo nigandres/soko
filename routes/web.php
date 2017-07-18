@@ -35,4 +35,13 @@ Route::group(['middleware' => Jerarquia::class], function ()
 Route::get('/config/{id}/excel','DatoController@exportExcel');
 Route::get('/download/{tabla}','ExcelController@exportar');
 Route::get('/upload','ExcelController@impotar');
+Route::group(['prefix' => 'importar-archivos-momo'/*, 'middleware' => ['auth']*/], function()
+{
+    Route::get('/excel/importar','ExcelController@importar');
+});
+
+Route::group(['prefix' => 'personas-momo'/*, 'middleware' => ['auth']*/], function()
+{
+    Route::resource('/importadas','PersonaController');
+});
 
