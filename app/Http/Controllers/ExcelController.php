@@ -38,7 +38,8 @@ class ExcelController extends Controller
             }
 
             $personasActualizadas = Persona::all();
-            $this->ordenamientoBaseDeDatos($personasActualizadas,count($personasActualizadas));
+            // $this->ordenamientoBaseDeDatos($personasActualizadas,count($personasActualizadas));
+            $this->ordenamientoBaseDeDatos($personasActualizadas,0,count($personasActualizadas)-1);
         }
         return redirect()->action('PersonaController@index');
     }
@@ -170,38 +171,93 @@ class ExcelController extends Controller
         $this->colaImport[] = $registro;
     }
 
-    public function ordenamientoBaseDeDatos($baseDeDatos,$tamanio)
+    public function ordenamientoBaseDeDatos($baseDeDatos,$min,$max)
     {
-    	$i;
-    	$j;
-    	$aux;
-    	for($i=1;$i < $tamanio;$i++)
+    	if($min >= $max)
     	{
-    		$j = $i;
-    		while($j > 0 && $baseDeDatos[$j-1]->codigo > $baseDeDatos[$j]->codigo)
-    		{
-    			$aux = $baseDeDatos[$j];
-    			$baseDeDatos[$j] = $baseDeDatos[$j-1];
-    			$baseDeDatos[$j-1] = $aux;
-    			$j--;
-    		}
+    		return;
     	}
-    	$personas = Persona::all();
-    	for($i=0;$i < count($baseDeDatos);$i++)
-        {
-        	$personaAntes = $personas[$i];
-        	$personaDespues = $baseDeDatos[$i];
-    	// dd($personaDespues);
-        	$personaAntes->nombre = $personaDespues->nombre;
-	        $personaAntes->codigo = $personaDespues->codigo;
-	        $personaAntes->adscripcion_nominal = $personaDespues->adscripcion_nominal;
-	        // $personaAntes->adscripcion_fisica = $personaDespues->blablabla;
-	        $personaAntes->nombramiento = $personaDespues->nombramiento;
-	        $personaAntes->plantel = $personaDespues->plantel;
-	        $personaAntes->save();
-            // $this->personaSave($personaAntes,$personaDespues);
-        }
+    	$mid = round(($min+$max)/2, 0, PHP_ROUND_HALF_DOWN);
+    	$this->ordenamientoBaseDeDatos($baseDeDatos,$min,$mid);
+    	$this->ordenamientoBaseDeDatos($baseDeDatos,$mid+1,$max);
+    	$this->merge($baseDeDatos,$min,$max);
     }
+
+    public function merge($baseDeDatos,$izqIni,$derFin)
+    {
+    	for($i=0;$i<$derFin;$i++)
+    	{
+    		$aux[$i] = $baseDeDatos[$i];
+    	}
+    	$izqFin = round(($izqIni+$derFin)/2, 0, PHP_ROUND_HALF_DOWN);
+    	$derIni = $izqFin + 1;
+    	$tamanio = $derFin - $izqIni + 1;
+    	$left = $izqIni;
+	    $right = $derIni;
+	    $index = $izqIni;
+	    while($left <= $izqFin && $right <= $derFin)
+	    {
+	    	if($baseDeDatos[$left] <= $baseDeDatos[$right])
+	    	{
+	    		$aux[$index] = $baseDeDatos[$left];
+	    		$left++;
+	    	}
+	    	else
+	    	{
+	    		$aux[$index] = $baseDeDatos[$right];
+	    		$right++;
+	    	}
+    		$index++;
+	    }
+	    while ($left <= $izqFin)
+	    {
+	    	$aux[$index] = $baseDeDatos[$left];
+	    	$left++;
+	    }
+	    while ($right <= $derFin)
+	    {
+	    	$aux[$index] = $baseDeDatos[$right];
+	    	$right++;
+	    }
+    	for($i=0;$i<$derFin;$i++)
+    	{
+    		$baseDeDatos[$i] = $aux[$i];
+    		$baseDeDatos[$i]->save();
+    	}
+    }
+
+    // public function ordenamientoBaseDeDatos($baseDeDatos,$tamanio)
+    // {
+    // 	$i;
+    // 	$j;
+    // 	$aux;
+    // 	for($i=1;$i < $tamanio;$i++)
+    // 	{
+    // 		$j = $i;
+    // 		while($j > 0 && $baseDeDatos[$j-1]->codigo > $baseDeDatos[$j]->codigo)
+    // 		{
+    // 			$aux = $baseDeDatos[$j];
+    // 			$baseDeDatos[$j] = $baseDeDatos[$j-1];
+    // 			$baseDeDatos[$j-1] = $aux;
+    // 			$j--;
+    // 		}
+    // 	}
+    // 	$personas = Persona::all();
+    // 	for($i=0;$i < count($baseDeDatos);$i++)
+    //     {
+    //     	$personaAntes = $personas[$i];
+    //     	$personaDespues = $baseDeDatos[$i];
+    // 	// dd($personaDespues);
+    //     	$personaAntes->nombre = $personaDespues->nombre;
+	   //      $personaAntes->codigo = $personaDespues->codigo;
+	   //      $personaAntes->adscripcion_nominal = $personaDespues->adscripcion_nominal;
+	   //      // $personaAntes->adscripcion_fisica = $personaDespues->blablabla;
+	   //      $personaAntes->nombramiento = $personaDespues->nombramiento;
+	   //      $personaAntes->plantel = $personaDespues->plantel;
+	   //      $personaAntes->save();
+    //         // $this->personaSave($personaAntes,$personaDespues);
+    //     }
+    // }
 
     public function exportar($tabla)
     {
