@@ -38,6 +38,7 @@ Route::get('/upload','ExcelController@impotar');
 Route::group(['prefix' => 'importar-archivos-momo'/*, 'middleware' => ['auth']*/], function()
 {
     Route::get('/excel/importar','ExcelController@importar');
+    Route::get('/excel/exportar','ExcelController@exportar');
 });
 
 Route::group(['prefix' => 'personas-momo'/*, 'middleware' => ['auth']*/], function()

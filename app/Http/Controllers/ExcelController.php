@@ -259,32 +259,16 @@ class ExcelController extends Controller
     //     }
     // }
 
-    public function exportar($tabla)
+    public function exportar()
     {
-    	// dd($tabla);
-    	$nombres = array("Datos","Users");
-    	if($tabla == 'dato')
-    	{
-    		$nombre = $nombres[0];
-	    	$datos = Dato::all();
-	    	foreach ($datos as $dato)
-	    	{
-		        $arreglo[] = array('ID' => 'hola'/*$dato->id*/, 'NUMEROS' => $dato->numeros, 'LETRAS' => $dato->letras);
-	    	}
-    	}
-    	elseif($tabla == 'user')
-    	{
-    		$nombre = $nombres[1];
-    		$users = User::all();
-	    	foreach ($users as $user)
-	    	{
-		        $arreglo[] = array($user->id,$user->nombre,$user->edad,$user->cargo,$user->correo,$user->password);
-	    	}
-    	}
-        Excel::create($nombre, function($excel) use ($arreglo) {
-	        $excel->sheet('uno', function($sheet) use ($arreglo) {
+        $personas = Persona::all();
+        foreach ($personas as $persona)
+        {
+            $arreglo[] = array('CODIGO' => $persona->codigo, 'NOMBRE' => $persona->nombre, 'DESCTAB' => $persona->nombramiento, 'DD4' => $persona->adscripcion_nominal, 'DD2' => $persona->plantel,);
+        }
+        Excel::create('PARACEIS', function($excel) use ($arreglo) {
+	        $excel->sheet('hoja1', function($sheet) use ($arreglo) {
                 // Sheet manipulation
-		        // dd($arreglo);
                 $sheet->fromArray($arreglo);
             });
         })->export('xls');

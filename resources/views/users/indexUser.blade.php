@@ -1,4 +1,3 @@
-<!-- se hizo un vista para que se puedan visualizar los usuarios -->
 @extends('layouts.app')
 
 @section('content')

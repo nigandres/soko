@@ -13,7 +13,6 @@ class CreateUsersTable extends Migration
      */
     public function up()
     {
-        // se modifican los campos de la tabla users
         Schema::create('users', function (Blueprint $table) {
             $table->increments('id');
             $table->string('nombre')->unque();

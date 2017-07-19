@@ -12,7 +12,7 @@
                 <div class="panel-body">
                 <a href="" class="btn btn-info">Crear una nueva persona</a>
                     <br>
-                    <a href="" class="btn btn-danger">exportar todos</a>
+                    <a href="{{ action('ExcelController@exportar') }}" class="btn btn-danger">exportar todos</a>
                     <a href="{{ action('ExcelController@importar') }}" class="btn btn-warning">importar</a>
                     <br>
                     <table>
