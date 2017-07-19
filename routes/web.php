@@ -45,4 +45,9 @@ Route::group(['prefix' => 'personas-momo'/*, 'middleware' => ['auth']*/], functi
 {
     Route::resource('/importadas','PersonaController');
 });
+Route::group(['prefix' => 'archivo'/*, 'middleware' => ['auth']*/], function()
+{
+    Route::get('/formulario','StorageController@index');
+    Route::post('/guardar','StorageController@save');
+});
 
