@@ -10,14 +10,17 @@
       <div class="panel-heading">Agregar archivos</div>
         <div class="panel-body">
         <!-- debo cambia el action para que apunte a mi url de proyecto local -->
-          <form method="POST" action="http://diamond-chaos.codio.io:3000/tuto/public/storage/create" accept-charset="UTF-8" enctype="multipart/form-data">
+          @if(isset($mensaje))
+            <h1>{{ $mensaje }}</h1>
+          @endif
+          <form method="POST" action="{{ action('StorageController@save') }}" accept-charset="UTF-8" enctype="multipart/form-data">
             
             <input type="hidden" name="_token" value="{{ csrf_token() }}">
             
             <div class="form-group">
               <label class="col-md-4 control-label">Nuevo Archivo</label>
               <div class="col-md-6">
-                <input type="file" class="form-control" name="file" >
+                <input type="file" class="form-control" name="archivo" >
               </div>
             </div>
  
