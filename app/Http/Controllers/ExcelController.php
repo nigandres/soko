@@ -27,7 +27,7 @@ class ExcelController extends Controller
         $nombre = $fichero->getClientOriginalName();
         $encontrar = '.';
         $posicion = strpos($nombre, $encontrar);
-        $subcadena = substr($nombre, $posicion);
+        $subcadena = strtolower(substr($nombre, $posicion));
         if($subcadena == '.xls' || $subcadena == '.xlsx')
         {
             Storage::disk('local')->put($nombre, File::get($fichero));
