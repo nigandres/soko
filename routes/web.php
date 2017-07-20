@@ -32,12 +32,13 @@ Route::group(['middleware' => Jerarquia::class], function ()
 	{
 		Route::resource('/user','UserController');
 	});
-Route::get('/config/{id}/excel','DatoController@exportExcel');
-Route::get('/download/{tabla}','ExcelController@exportar');
-Route::get('/upload','ExcelController@impotar');
+// Route::get('/config/{id}/excel','DatoController@exportExcel');
+// Route::get('/download/{tabla}','ExcelController@exportar');
+// Route::get('/upload','ExcelController@impotar');
 Route::group(['prefix' => 'importar-archivos-momo'/*, 'middleware' => ['auth']*/], function()
 {
-    Route::get('/excel/importar','ExcelController@importar');
+    Route::post('/excel/validar','ExcelController@validar');
+    Route::get('/excel/importar','ExcelController@importarExcel');
     Route::get('/excel/exportar','ExcelController@exportar');
 });
 

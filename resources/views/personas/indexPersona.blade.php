@@ -10,10 +10,17 @@
                 <div class="panel-heading">Personas</div>
 
                 <div class="panel-body">
-                <a href="" class="btn btn-info">Crear una nueva persona</a>
-                    <br>
-                    <a href="{{ action('ExcelController@exportar') }}" class="btn btn-danger">exportar todos</a>
-                    <a href="{{ action('ExcelController@importar') }}" class="btn btn-warning">importar</a>
+                    <form method="POST" action="{{ action('ExcelController@validar') }}" accept-charset="UTF-8" enctype="multipart/form-data">
+                        <div class="form-group">
+                            <div class="col-md-6">
+                                <a href="{{ action('ExcelController@importarExcel') }}" class="btn btn-warning">importar chafa</a>
+                                <a href="{{ action('ExcelController@exportar') }}" class="btn btn-danger">Exportar</a>
+                                <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                <button type="submit" class="btn btn-primary">Importar</button>
+                                <input type="file" class="form-control" name="archivo" >
+                            </div>
+                        </div>
+                    </form>
                     <br>
                     <table>
                         <tr>

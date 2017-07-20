@@ -84,9 +84,10 @@
 
                 <div class="links">
                     <!-- agregue las rutas de la vistas de los registrados en sus tablas -->
-                    <a href="{{ action('PersonaController@index') }}" title="restriccion de edad">Personas</a>
+                    <a href="{{ action('PersonaController@index') }}" title="pruebas de tabla con funciones identicas y/o a mejorar">Personas</a>
                     <a href="{{ route('dato.index') }}" title="restriccion de edad">Datos</a>
                     <a href="{{ route('user.index') }}" title="restriccion de cargo">Usuarios</a>
+                    <a href="{{ action('StorageController@index') }}" title="pruebas de almacenamiento">Archivos</a>
                 </div>
                 <br><br>
                 <div class="links">

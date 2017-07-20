@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Dato;
 use App\User;
 use App\Persona;
+use Storage;
+use File;
 use Maatwebsite\Excel\Facades\Excel;
 // use Maatwebsite\Excel\Files\ExcelFile;
 use Illuminate\Http\Request;
@@ -13,20 +15,48 @@ class ExcelController extends Controller
 {
     //
     private $colaImport;
-    public function importar()
+
+    public function validar(Request $request)
     {
-    	set_time_limit(120);//esto incrementa el tiempo de respuesta
+        $regresar = redirect()->action('PersonaController@index');
+        $fichero = $request->file('archivo');
+        if($fichero == null)
+        {
+            return $regresar;
+        }
+        $nombre = $fichero->getClientOriginalName();
+        $encontrar = '.';
+        $posicion = strpos($nombre, $encontrar);
+        $subcadena = substr($nombre, $posicion);
+        if($subcadena == '.xls' || $subcadena == '.xlsx')
+        {
+            Storage::disk('local')->put($nombre, File::get($fichero));
+            $ruta_de_almacen = public_path('archivos').'/'.$nombre;
+            $this->importarExcel($ruta_de_almacen);
+        }
+        else
+        {
+            return $regresar;
+        }
+        return $regresar;
+    }
+
+    public function importarExcel($ruta)
+    {
+        set_time_limit(120);//esto incrementa el tiempo de respuesta
         $personas = Persona::all();
         if(count($personas) == 0)
         {
-            Excel::load('PARACEIS.xls', function($reader) {
+            // Excel::load('PARACEIS.xls', function($reader) {
+            Excel::load($ruta, function($reader) {
                 $tabla_importada = $reader->get(array('codigo','nombre','desctab','dd2','dd4'));
                 $this->excelNuevo($tabla_importada);
             })->get()/*EL GET PARECE QUE SE PUEDE OMITIR*/;
         }
         else
         {
-            Excel::load('PARACEIS.xls', function($reader) use ($personas) {
+            // Excel::load('PARACEIS.xls', function($reader) use ($personas) {
+            Excel::load($ruta, function($reader) use ($personas) {
                 $tabla_importada = $reader->get(array('codigo','nombre','desctab','dd2','dd4'));
                 $this->excelActualizar($tabla_importada,$personas);
             })->get()/*EL GET PARECE QUE SE PUEDE OMITIR*/;
@@ -41,7 +71,6 @@ class ExcelController extends Controller
             // $this->ordenamientoBaseDeDatos($personasActualizadas,count($personasActualizadas));
             $this->ordenamientoBaseDeDatos($personasActualizadas,0,count($personasActualizadas)-1);
         }
-        return redirect()->action('PersonaController@index');
     }
 
     public function excelNuevo($importacion)

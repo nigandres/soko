@@ -51,6 +51,27 @@ dd($archivo->gettype());
       Storage::disk('local')->put($nombre,  \File::get($archivo));
 
 
+      $encontrar = '.';
+
+      $posicion = strpos($nombre, $encontrar);
+
+      $subcadena = substr($nombre, $posicion);
+
+      if($subcadena == '.xls')
+      {
+        dd($subcadena);
+      }
+      elseif($subcadena == '.xlsx')
+      {
+        dd($subcadena);
+      }
+      else
+      {
+        return view('personas.pedirPersona');
+      }
+
+
+
 // $info = Storage::get('PARACEIS.xls');//no se usa en la funcion de abajo
       Excel::load(public_path('archivos').'/'.$nombre, function($reader) {
 // dd(public_path('archivos').'/'.$nombre.'____'.public_path() . '/archivos/' . $nombre);

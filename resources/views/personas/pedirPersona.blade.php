@@ -10,9 +10,6 @@
       <div class="panel-heading">Agregar archivos</div>
         <div class="panel-body">
         <!-- debo cambia el action para que apunte a mi url de proyecto local -->
-          @if(isset($mensaje))
-            <h1>{{ $mensaje }}</h1>
-          @endif
           <form method="POST" action="{{ action('StorageController@save') }}" accept-charset="UTF-8" enctype="multipart/form-data">
             
             <input type="hidden" name="_token" value="{{ csrf_token() }}">
