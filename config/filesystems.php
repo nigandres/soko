@@ -48,7 +48,6 @@ return [
             // 'root' => storage_path('app'),
             // 'root' => public_path().'storage',
             'root' => public_path('archivos'),
-            // 'root' => storage_path('storage/app/public'),
         ],
 
         'public' => [
