@@ -49,6 +49,11 @@ class ExcelController extends Controller
         {
             // Excel::load('PARACEIS.xls', function($reader) {
             Excel::load($ruta, function($reader) {
+                $campos = $this->camposRequeridos($reader->get()->getHeading());
+                if($campos != 0)
+                {
+                    return redirect()->action('PersonaController@index');
+                }
                 $tabla_importada = $reader->get(array('codigo','nombre','desctab','dd2','dd4'));
                 $this->excelNuevo($tabla_importada);
             })->get()/*EL GET PARECE QUE SE PUEDE OMITIR*/;
@@ -57,6 +62,11 @@ class ExcelController extends Controller
         {
             // Excel::load('PARACEIS.xls', function($reader) use ($personas) {
             Excel::load($ruta, function($reader) use ($personas) {
+                $campos = $this->camposRequeridos($reader->get()->getHeading());
+                if($campos != 0)
+                {
+                    return redirect()->action('PersonaController@index');
+                }
                 $tabla_importada = $reader->get(array('codigo','nombre','desctab','dd2','dd4'));
                 $this->excelActualizar($tabla_importada,$personas);
             })->get()/*EL GET PARECE QUE SE PUEDE OMITIR*/;
@@ -287,6 +297,25 @@ class ExcelController extends Controller
     //         // $this->personaSave($personaAntes,$personaDespues);
     //     }
     // }
+
+    public function camposRequeridos($encabezados)
+    {
+        $campos = array('dd4','dd2','desctab','nombre','codigo');
+        foreach ($encabezados as $encabezado)
+        {
+            for($i=count($campos)-1;$i>=0;$i--)
+            {
+                if($encabezado == $campos[$i])
+                {
+                    // array_pop($campos);
+                    unset($campos[$i]);
+                    // array_splice($campos,$i,1);
+                    // array_diff($campos,$campos[$i]/*,$campos[$i+1]*/);
+                }
+            }
+        }
+        return count($campos);
+    }
 
     public function exportar()
     {
