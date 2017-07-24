@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Dato;
-use App\User;
+// use App\Dato;
+// use App\User;
 use App\Persona;
+use App\ExcelImportado;
 use Storage;
 use File;
 use Maatwebsite\Excel\Facades\Excel;
@@ -20,19 +21,35 @@ class ExcelController extends Controller
     {
         $regresar = redirect()->action('PersonaController@index');
         $fichero = $request->file('archivo');
+        // $algo = File::lastModified('/home/vagrant/Code/soko/public/archivos/rusa.png');
+        // dd(date("F d Y H:i:s.",$algo));
+        // $ruta_de_almacen = public_path('archivos').'/'.'rusa.png';
+        // dd($fichero->getpathname());
+        // $ruta = $_FILES["archivo"]["tmp_name"];
+        // $algo = File::lastModified($ruta);
+        // $time = Storage::lastModified('rusa.png');
+        // dd(dirname($fichero->getrealpath()));
+        // dd(date("F d Y H:i:s.",$algo));
         if($fichero == null)
         {
             return $regresar;
         }
-        $nombre = $fichero->getClientOriginalName();
-        $encontrar = '.';
-        $posicion = strpos($nombre, $encontrar);
-        $subcadena = strtolower(substr($nombre, $posicion));
-        if($subcadena == '.xls' || $subcadena == '.xlsx')
+        // $fecha = date("D_M_Y",time()).' ';
+        // $fecha = date("l_F_Y_d_m_y_H_i_s_a",time()).' ';
+        $nombre = date("d_m_y H-i-s",time()).' '.$fichero->getClientOriginalName();
+        // $encontrar = '.';
+        // $posicion = strpos($nombre, $encontrar);
+        // $subcadena = strtolower(substr($nombre, $posicion+1));
+        $extension = File::extension($nombre);
+        // if($subcadena == 'xls' || $subcadena == 'xlsx')
+        if($extension == 'xls' || $extension == 'xlsx')
         {
             Storage::disk('local')->put($nombre, File::get($fichero));
             $ruta_de_almacen = public_path('archivos').'/'.$nombre;
-            $this->importarExcel($ruta_de_almacen);
+            // $ruta_de_almacen = public_path('archivos').'/'.'rusa.png';
+            $file = File::lastModified($ruta_de_almacen);
+            $fechaMod = date("d/m/y H:i:s",$file);
+            $this->importarExcel($ruta_de_almacen,$fichero,$fechaMod,$extension,$nombre);
         }
         else
         {
@@ -41,18 +58,36 @@ class ExcelController extends Controller
         return $regresar;
     }
 
-    public function importarExcel($ruta)
+    public function storeExcel($ruta,$archivo,$fecha,$exten,$nombre)
+    {
+        $fichero = new ExcelImportado();
+        $fichero->nombre = $nombre;
+        $fichero->mime = $archivo->getClientMimeType();
+        $fichero->tamanio = $archivo->getClientSize();
+        $fichero->importado = $fecha;
+        $fichero->extencion = $exten;
+        $fichero->ruta = $ruta;
+        $fichero->tipo = $archivo->gettype();
+        $fichero->save();
+    }
+
+    public function importarExcel($ruta,$fichero,$fechaMod,$extension,$nombre)
     {
         set_time_limit(120);//esto incrementa el tiempo de respuesta
         $personas = Persona::all();
         if(count($personas) == 0)
         {
             // Excel::load('PARACEIS.xls', function($reader) {
-            Excel::load($ruta, function($reader) {
+            Excel::load($ruta, function($reader) use ($ruta,$fichero,$fechaMod,$extension,$nombre) {
                 $campos = $this->camposRequeridos($reader->get()->getHeading());
                 if($campos != 0)
                 {
+                    Storage::delete($nombre);
                     return redirect()->action('PersonaController@index');
+                }
+                else
+                {
+                    $this->storeExcel($ruta,$fichero,$fechaMod,$extension,$nombre);
                 }
                 $tabla_importada = $reader->get(array('codigo','nombre','desctab','dd2','dd4'));
                 $this->excelNuevo($tabla_importada);
@@ -61,11 +96,16 @@ class ExcelController extends Controller
         else
         {
             // Excel::load('PARACEIS.xls', function($reader) use ($personas) {
-            Excel::load($ruta, function($reader) use ($personas) {
+            Excel::load($ruta, function($reader) use ($personas,$ruta,$fichero,$fechaMod,$extension,$nombre) {
                 $campos = $this->camposRequeridos($reader->get()->getHeading());
                 if($campos != 0)
                 {
+                    Storage::delete($nombre);
                     return redirect()->action('PersonaController@index');
+                }
+                else
+                {
+                    $this->storeExcel($ruta,$fichero,$fechaMod,$extension,$nombre);
                 }
                 $tabla_importada = $reader->get(array('codigo','nombre','desctab','dd2','dd4'));
                 $this->excelActualizar($tabla_importada,$personas);
