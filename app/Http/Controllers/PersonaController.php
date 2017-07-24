@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Persona;
+use App\ExcelImportado;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
@@ -18,7 +19,8 @@ class PersonaController extends Controller
     public function index()
     {
         $personas = Persona::all();
-        return view('personas.indexPersona', compact('personas'));
+        $importados = ExcelImportado::all();
+        return view('personas.indexPersona', compact('personas','importados'));
     }
 
     /**

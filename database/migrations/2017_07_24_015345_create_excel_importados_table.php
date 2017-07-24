@@ -15,13 +15,13 @@ class CreateExcelImportadosTable extends Migration
     {
         Schema::create('excel_importados', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('nombre');
+            $table->string('nombre')->unique();
             $table->string('mime');
             $table->bigInteger('tamanio');
             // $table->datetime('importado');
             $table->string('importado');
             $table->string('extencion');
-            $table->string('ruta');
+            $table->string('ruta')->unique();
             $table->string('tipo');
             $table->timestamps();
         });

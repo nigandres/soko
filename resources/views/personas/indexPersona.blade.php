@@ -18,6 +18,13 @@
                                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                 <button type="submit" class="btn btn-primary">Importar</button>
                                 <input type="file" class="form-control" name="archivo" >
+                                @if(count($importados) == 0)
+                                @else
+                                    @foreach($importados as $importado)
+                                    @endforeach
+                                    <label>fecha de ultimo archivo</label>
+                                    <label>{{ $importado->nombre }}</label>
+                                @endif
                             </div>
                         </div>
                     </form>
@@ -28,7 +35,7 @@
                             <td width="170">NOMBRE</td>
                             <td width="170">CODIGO</td>
                             <td width="170">ADSCRIPCION NOMINAL</td>
-                            <!-- <td width="170">ADSCRIPCION FISICA</td> -->
+                            <td width="170">ADSCRIPCION FISICA</td>
                             <td width="170">NOMBRAMIENTO</td>
                             <td width="170">PLANTEL</td>
                         </tr>
@@ -38,7 +45,7 @@
                             <td width="170">{{ $persona->nombre }}</td>
                             <td width="170">{{ $persona->codigo }}</td>
                             <td width="170">{{ $persona->adscripcion_nominal }}</td>
-                            <!-- <td width="170">{{ $persona->adscripcion_fisica }}</td> -->
+                            <td width="170">{{ $persona->adscripcion_fisica }}</td>
                             <td width="170">{{ $persona->nombramiento }}</td>
                             <td width="170">{{ $persona->plantel }}</td>
                             <td><a href="{{ action('PersonaController@show', [$persona->id]) }}" class="btn btn-default">exportar</a></td>

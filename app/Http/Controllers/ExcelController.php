@@ -40,7 +40,7 @@ class ExcelController extends Controller
         // $encontrar = '.';
         // $posicion = strpos($nombre, $encontrar);
         // $subcadena = strtolower(substr($nombre, $posicion+1));
-        $extension = File::extension($nombre);
+        $extension = strtolower(File::extension($nombre));
         // if($subcadena == 'xls' || $subcadena == 'xlsx')
         if($extension == 'xls' || $extension == 'xlsx')
         {
