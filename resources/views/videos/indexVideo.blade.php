@@ -9,19 +9,17 @@
                 <div class="panel-heading">Dashboard</div>
 
                 <div class="panel-body">
-                <a href="{{ route('dato.create') }}" class="btn btn-info">Crear un nuevo dato</a>
-                    <br>
                     <table>
                         <tr>
-                            <td width="50">ID</td>
-                            <td width="50">NUMEROS</td>
-                            <td width="50">LETRAS</td>
+                            <td width="150">ID</td>
+                            <td width="150">TITULO</td>
+                            <td width="150">URL</td>
                         </tr>
-                        @foreach($datos as $dato)
+                        @foreach($videos as $video)
                         <tr>
-                            <td width="50">{{ $dato->id }}</td>
-                            <td width="50">{{ $dato->numeros }}</td>
-                            <td width="50">{{ $dato->letras }}</td>
+                            <td width="150">{{ $video->id }}</td>
+                            <td width="150">{{ $video->titulo }}</td>
+                            <td width="150"><a href="{{ $video->url }}">{{ $video->url }}</a></td>
                         </tr>
                         @endforeach
                     </table>

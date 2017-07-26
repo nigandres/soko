@@ -9,19 +9,17 @@
                 <div class="panel-heading">Dashboard</div>
 
                 <div class="panel-body">
-                <a href="{{ route('dato.create') }}" class="btn btn-info">Crear un nuevo dato</a>
-                    <br>
                     <table>
                         <tr>
-                            <td width="50">ID</td>
-                            <td width="50">NUMEROS</td>
-                            <td width="50">LETRAS</td>
+                            <td width="150">ID</td>
+                            <td width="150">TITULO</td>
+                            <td width="150">CUERPO</td>
                         </tr>
-                        @foreach($datos as $dato)
+                        @foreach($posts as $post)
                         <tr>
-                            <td width="50">{{ $dato->id }}</td>
-                            <td width="50">{{ $dato->numeros }}</td>
-                            <td width="50">{{ $dato->letras }}</td>
+                            <td width="150">{{ $post->id }}</td>
+                            <td width="150">{{ $post->titulo }}</td>
+                            <td width="150">{{ $post->cuerpo }}</td>
                         </tr>
                         @endforeach
                     </table>

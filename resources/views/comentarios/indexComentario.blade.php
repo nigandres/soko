@@ -9,19 +9,19 @@
                 <div class="panel-heading">Dashboard</div>
 
                 <div class="panel-body">
-                <a href="{{ route('dato.create') }}" class="btn btn-info">Crear un nuevo dato</a>
-                    <br>
                     <table>
                         <tr>
-                            <td width="50">ID</td>
-                            <td width="50">NUMEROS</td>
-                            <td width="50">LETRAS</td>
+                            <td width="250">ID</td>
+                            <td width="250">CUERPO</td>
+                            <td width="250">COMENTARIO ID</td>
+                            <td width="250">COMENTARIO TIPO</td>
                         </tr>
-                        @foreach($datos as $dato)
+                        @foreach($comentarios as $comentario)
                         <tr>
-                            <td width="50">{{ $dato->id }}</td>
-                            <td width="50">{{ $dato->numeros }}</td>
-                            <td width="50">{{ $dato->letras }}</td>
+                            <td width="250">{{ $comentario->id }}</td>
+                            <td width="250">{{ $comentario->cuerpo }}</td>
+                            <td width="250">{{ $comentario->comentariable_id }}</td>
+                            <td width="250">{{ $comentario->comentariable_type }}</td>
                         </tr>
                         @endforeach
                     </table>

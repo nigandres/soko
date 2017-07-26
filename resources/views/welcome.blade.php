@@ -91,6 +91,13 @@
                 </div>
                 <br><br>
                 <div class="links">
+                    <!-- agregue las rutas de la vistas de los registrados en sus tablas -->
+                    <a href="{{ action('VideoController@index') }}">Post</a>
+                    <a href="{{ action('PostController@index') }}">Video</a>
+                    <a href="{{ action('ComentarioController@index') }}">Comentarios</a>
+                </div>
+                <br><br>
+                <div class="links">
                     <a href="https://laravel.com/docs">Documentation</a>
                     <a href="https://laracasts.com">Laracasts</a>
                     <a href="https://laravel-news.com">News</a>

@@ -52,3 +52,10 @@ Route::group(['prefix' => 'archivo'/*, 'middleware' => ['auth']*/], function()
     Route::post('/guardar','StorageController@save');
 });
 
+Route::group(['prefix' => 'polimorfica'/*, 'middleware' => ['auth']*/], function()
+{
+    Route::resource('/posts','PostController');
+    Route::resource('/videos','VideoController');
+    Route::resource('/comentarios','ComentarioController');
+});
+
