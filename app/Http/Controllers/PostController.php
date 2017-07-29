@@ -15,9 +15,8 @@ class PostController extends Controller
     public function index()
     {
         //
-        $posts = Post::all();
-        // $posts = Post::with('comentarios')->get();
-        // dd($posts);
+        // $posts = Post::all();
+        $posts = Post::with('comentarios')->get();
         return view('posts.indexPost', compact('posts'));
     }
 
@@ -29,6 +28,7 @@ class PostController extends Controller
     public function create()
     {
         //
+        return view('posts.formPost');
     }
 
     /**
@@ -40,6 +40,8 @@ class PostController extends Controller
     public function store(Request $request)
     {
         //
+        Post::create($request->input());
+        return redirect()->action('PostController@index');
     }
 
     /**

@@ -15,7 +15,9 @@ class ComentarioController extends Controller
     public function index()
     {
         //
-        $comentarios = Comentario::all();
+        // $comentarios = Comentario::all();
+        $comentarios = Comentario::with('comentariable')->get();
+        // dd($comentarios);
         return view('comentarios.indexComentario', compact('comentarios'));
     }
 
@@ -24,9 +26,16 @@ class ComentarioController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
         //
+        // dd($request->server('QUERY_STRING'));
+        $encontrar = '&';
+        $posicion = strpos($request->server('QUERY_STRING'), $encontrar);
+        $videoId = substr($request->server('QUERY_STRING'),0 , $posicion);
+        $videoTipo = substr($request->server('QUERY_STRING'), $posicion+1);
+        // dd($videoId,$videoTipo);
+        return view('comentarios.formComentario', compact(['videoId','videoTipo']));
     }
 
     /**
@@ -38,6 +47,9 @@ class ComentarioController extends Controller
     public function store(Request $request)
     {
         //
+        // dd($request->input());
+        Comentario::create($request->input());
+        return redirect()->action('ComentarioController@index');
     }
 
     /**

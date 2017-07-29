@@ -92,8 +92,8 @@
                 <br><br>
                 <div class="links">
                     <!-- agregue las rutas de la vistas de los registrados en sus tablas -->
-                    <a href="{{ action('VideoController@index') }}">Post</a>
-                    <a href="{{ action('PostController@index') }}">Video</a>
+                    <a href="{{ action('VideoController@index') }}">Video</a>
+                    <a href="{{ action('PostController@index') }}">Post</a>
                     <a href="{{ action('ComentarioController@index') }}">Comentarios</a>
                 </div>
                 <br><br>

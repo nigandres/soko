@@ -15,8 +15,8 @@ class VideoController extends Controller
     public function index()
     {
         //
-        $videos = Video::all();
-        // $videos = Video::with('comentarios')->get();
+        // $videos = Video::all();
+        $videos = Video::with('comentarios')->get();
         // dd($videos);
         return view('videos.indexVideo', compact('videos'));
     }
@@ -29,6 +29,7 @@ class VideoController extends Controller
     public function create()
     {
         //
+        return view('videos.formVideo');
     }
 
     /**
@@ -40,6 +41,12 @@ class VideoController extends Controller
     public function store(Request $request)
     {
         //
+        Video::create($request->input());
+        // $video = new Video();
+        // $video->titulo = $request->input('titulo');
+        // $video->url = $request->input('url');
+        // $video->save();
+        return rediret()->action('VideoController@index');
     }
 
     /**
